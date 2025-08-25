@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: My Assets
+  m_EditorClassIdentifier: 
+  m_GroupName: My Assets
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 4c0556d7f1b9b7746a34d498d087f69f
+  m_SerializeEntries:
+  - m_GUID: a02b3935633b30746a3ad79b1c5fa44a
+    m_Address: Prefabs/Nut
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 90197af86ccd0734997f04096f70f8dc
+    m_Address: Prefabs/Bolts4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 47ef9ef07df18b443b805bff448ce10d
+    m_Address: Assets/_Nuts And Bolts/Prefabs/Green_Nut.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 75b11acc690c3f140ae30225a7e77c2d
+    m_Address: Assets/_Nuts And Bolts/Prefabs/Purple_Nut.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d05fb7953c08ca94d893492ed6575a95
+    m_Address: Assets/_Nuts And Bolts/Prefabs/Brown_Nut.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 472032c34c3d0684695d7768ffba9539
+    m_Address: Assets/_Nuts And Bolts/Prefabs/Red_Nut.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b9281b38363233148999c41b444f323d
+    m_Address: Assets/_Nuts And Bolts/Prefabs/Orange_Nut.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0ba54d5917db71446b4dead20216b74f
+    m_Address: Assets/_Nuts And Bolts/Prefabs/Blue_Nut .prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f1cd8a92b2dd2fe4a8cf0bc2229309f6
+    m_Address: Assets/_Nuts And Bolts/Prefabs/Yellow_Nut.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 06340e53ccdb57541b730717605a55f8, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f67edce3be10fb0429244161df049547, type: 2}
+    - {fileID: 11400000, guid: cf986df59c33735459566e16fe404e89, type: 2}
