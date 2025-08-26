@@ -113,7 +113,7 @@ public class Bolt
         {
             nutsStack.Push(nut);
             nut.SetBoltParent(this);
-            BoltController.instance.NutMoveToNewBolt(nut, availablePos[nutsStack.Count]);
+            BoltController.instance.NutMoveToNewBolt(nut, this,availablePos[nutsStack.Count]);
             //nut.AnimateMove(availablePos[nutsStack.Count],1f);
             BoltController.instance.isBusy = true;
             await Task.Delay(1000);
@@ -126,7 +126,7 @@ public class Bolt
             {
                 nutsStack.Push(nut);
                 nut.SetBoltParent(this);
-                BoltController.instance.NutMoveToNewBolt(nut, availablePos[nutsStack.Count]);
+                BoltController.instance.NutMoveToNewBolt(nut, this,availablePos[nutsStack.Count]);
                 //nut.AnimateMove(availablePos[nutsStack.Count],1f);
                 BoltController.instance.isBusy = true;
                 await Task.Delay(1000);
@@ -160,5 +160,19 @@ public class Bolt
             }
         }
         return eBoltState.SIMILAR_FULL;
+    }
+
+    //undo
+    public async Task NutComeBack(Nut nut)
+    {
+        nutsStack.Push(nut);
+        nut.SetBoltParent(this);
+
+
+        BoltController.instance.NutMoveToNewBolt(nut, this, availablePos[nutsStack.Count]);
+        //nut.AnimateMove(availablePos[nutsStack.Count],1f);
+        BoltController.instance.isBusy = true;
+        await Task.Delay(1000);
+        BoltController.instance.isBusy = false;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -17,6 +18,9 @@ public class BoltController : MonoBehaviour
     public bool isBusy=false;
 
     private bool isDragging= false;
+
+    //this stack stores the player's operation during play
+    private Stack<Dictionary<List<Bolt>,Nut>> oldStep = new Stack<Dictionary<List<Bolt>, Nut>>();
 
     private void OnEnable()
     {
@@ -58,9 +62,11 @@ public class BoltController : MonoBehaviour
     {
         if (isBusy) return;
         Swap();
+        if(Input.GetKeyDown(KeyCode.Space))
+            Undo();
     }
 
-    private void Swap()
+    private async void Swap()
     {
         //var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero); Game 2D
         if (Input.GetMouseButtonDown(0))
@@ -76,7 +82,7 @@ public class BoltController : MonoBehaviour
                     if (firstBolt.GetBoltState() == eBoltState.SIMILAR_FULL) return;
                     if (firstBolt.GetBoltState() == eBoltState.NONE) return;
                     selectedNut = firstBolt.GetTopNut();
-                    NutMoveUp(selectedNut);
+                    await NutMoveUp(selectedNut, firstBolt);
                     isDragging = true;
                 }
                 else
@@ -104,34 +110,62 @@ public class BoltController : MonoBehaviour
     private async void Match()
     {
         if (await secondBolt.AddTopNut(selectedNut))
+        {
+            AddStepToOldStep();
             ResetSelectedBolt();
+        }
         else
             ResetSecondBolt();
     }
 
+    //undo
+    private void AddStepToOldStep()
+    {
+        Dictionary<List<Bolt>, Nut> dict = new Dictionary<List<Bolt>, Nut>();
+        dict[new List<Bolt> { firstBolt, secondBolt }] = selectedNut;
+        oldStep.Push(dict);
+    }
+
+    public async void Undo()
+    {
+        if (oldStep.Count <= 0) return;
+
+        Dictionary<List<Bolt>, Nut> dict = new Dictionary<List<Bolt>, Nut>();
+        dict = oldStep.Pop();
+        List<Bolt> bolts = new List<Bolt>(dict.Keys.First());
+        Nut nut = dict.Values.First();
+        await NutMoveUp(nut, bolts[1]);
+        bolts[1].GetTopNut();
+        await bolts[0].NutComeBack(nut);
+        bolts[0].GetBoltState();
+        bolts[1].GetBoltState();
+
+    }
+
+
 
     //animation
     //move up
-    public async void NutMoveUp(Nut nut)
+    public async Task NutMoveUp(Nut nut, Bolt bolt)
     {
-        await AnimateNutMoveUp(nut);
+        await AnimateNutMoveUp(nut, bolt);
     }
-    private async Task AnimateNutMoveUp(Nut nut)
+    private async Task AnimateNutMoveUp(Nut nut, Bolt bolt)
     {
         isBusy = true; 
-        nut.AnimateClockwise(firstBolt.availablePos[0], 0.5f);
+        nut.AnimateClockwise(bolt.availablePos[0], 0.5f);
         await Task.Delay(500);
         isBusy = false;
     }
     //move to target
-    public async void NutMoveToNewBolt(Nut nut, Vector3 newBolt)
+    public async void NutMoveToNewBolt(Nut nut,Bolt bolt ,Vector3 newBolt)
     {
-        await AnimateNutMoveNewBolt(nut, newBolt);
+        await AnimateNutMoveNewBolt(nut, bolt,newBolt);
     }
-    private async Task AnimateNutMoveNewBolt(Nut nut, Vector3 newBolt)
+    private async Task AnimateNutMoveNewBolt(Nut nut, Bolt bolt,Vector3 newBolt)
     {
         isBusy = true;
-        nut.AnimateMove(secondBolt.availablePos[0], 0.5f);
+        nut.AnimateMove(bolt.availablePos[0], 0.5f);
         await Task.Delay(500);
         nut.Animatecounterclockwise(newBolt, 0.5f);
         await Task.Delay(500);
