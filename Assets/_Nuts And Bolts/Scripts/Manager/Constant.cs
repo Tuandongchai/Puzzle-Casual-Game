@@ -4,7 +4,12 @@ using UnityEngine;
 
 public static class Constant
 {
+    public const string BOLT_TYPE_THREE = "Assets/Resources_moved/Prefabs/Bolts3.prefab";
     public const string BOLT_TYPE_FOUR = "Prefabs/Bolts4";
+    public const string BOLT_TYPE_FIRE = "Assets/Resources_moved/Prefabs/Bolts5.prefab";
+    public const string BOLT_TYPE_SIX = "Assets/Resources_moved/Prefabs/Bolts6.prefab";
+    public const string BOLT_TYPE_SEVEN = "Assets/Resources_moved/Prefabs/Bolts7.prefab";
+
     public const string NUT = "Prefabs/Nut";
     public const string NUT_TYPE_BULE = "Assets/_Nuts And Bolts/Prefabs/Blue_Nut .prefab";
     public const string NUT_TYPE_BROWN = "Assets/_Nuts And Bolts/Prefabs/Brown_Nut.prefab";
@@ -18,10 +23,17 @@ public static class Constant
     {
         switch (type)
         {
-            /*case eBoltType.BOLT_THREE:
-                return*/
+            case eBoltType.BOLT_THREE:
+                return BOLT_TYPE_THREE;
+
             case eBoltType.BOLT_FOUR:
                 return BOLT_TYPE_FOUR;
+            case eBoltType.BOLT_FIVE:
+                return BOLT_TYPE_FIRE;
+            case eBoltType.BOLT_SIX:
+                return BOLT_TYPE_SIX;
+            case eBoltType.BOLT_SEVEN:
+                return BOLT_TYPE_SEVEN;
             default: 
                 return "";
         }

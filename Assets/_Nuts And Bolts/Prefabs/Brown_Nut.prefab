@@ -822,8 +822,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.70710707, y: -0, z: -0, w: 0.7071066}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35476, y: 0.35476, z: 0.35476}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5232674534386512341}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -6239,7 +6239,6 @@ GameObject:
   - component: {fileID: 546486260860964549}
   - component: {fileID: 6200396153424210657}
   - component: {fileID: 7251004383642127782}
-  - component: {fileID: 8118408546646611481}
   m_Layer: 6
   m_Name: Outline
   m_TagString: Untagged
@@ -6313,22 +6312,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!111 &8118408546646611481
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8957359250905586177}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 24e75aba96bcf0d4b9d2f7cd6cd15ada, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 24e75aba96bcf0d4b9d2f7cd6cd15ada, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &8963429978287635786
 GameObject:
   m_ObjectHideFlags: 0
@@ -6340,7 +6323,6 @@ GameObject:
   - component: {fileID: 5421485829803960412}
   - component: {fileID: 647144368713868199}
   - component: {fileID: 5431484167115118250}
-  - component: {fileID: 8095199519917334564}
   m_Layer: 6
   m_Name: HideColor
   m_TagString: Untagged
@@ -6415,19 +6397,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!111 &8095199519917334564
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8963429978287635786}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: c835f1a4a537cf649ac48c5e2291cb0b, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: c835f1a4a537cf649ac48c5e2291cb0b, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0

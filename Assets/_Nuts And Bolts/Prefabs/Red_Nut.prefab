@@ -464,7 +464,6 @@ GameObject:
   - component: {fileID: 2979470713548735625}
   - component: {fileID: 2396775128197452664}
   - component: {fileID: 3038831685680964689}
-  - component: {fileID: 7836027535317503994}
   m_Layer: 6
   m_Name: HideColor
   m_TagString: Untagged
@@ -539,22 +538,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!111 &7836027535317503994
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3332273371928722117}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: c835f1a4a537cf649ac48c5e2291cb0b, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: c835f1a4a537cf649ac48c5e2291cb0b, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &3885014710926792001
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,7 +633,6 @@ GameObject:
   - component: {fileID: 7166386108490865980}
   - component: {fileID: 5440968046755296511}
   - component: {fileID: 3341586126950307754}
-  - component: {fileID: 1836275137648075550}
   m_Layer: 6
   m_Name: Outline
   m_TagString: Untagged
@@ -724,22 +706,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!111 &1836275137648075550
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4758278788572525344}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 24e75aba96bcf0d4b9d2f7cd6cd15ada, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 24e75aba96bcf0d4b9d2f7cd6cd15ada, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &6055388324029887739
 GameObject:
   m_ObjectHideFlags: 0
@@ -1210,8 +1176,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.70710707, y: -0, z: -0, w: 0.7071066}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35476, y: 0.35476, z: 0.35476}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 254249746766631033}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}

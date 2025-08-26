@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -10,6 +11,9 @@ public enum eBoltType
 {
     BOLT_THREE,
     BOLT_FOUR,
+    BOLT_FIVE,
+    BOLT_SIX,
+    BOLT_SEVEN,
 };
 public enum eBoltState { 
     NONE,
@@ -35,7 +39,7 @@ public class Bolt
 
     private int currentNutsHas;
 
-    public Bolt(Transform transform ,Vector3 position, GameSettings settings, List<eNutColor> nutsType = null)
+    public Bolt(Transform transform ,Vector3 position, GameSettings settings, List<NutData> nutsType = null)
     {
         this.root = transform;
 
@@ -55,16 +59,14 @@ public class Bolt
             boltState = eBoltState.DIFFERENT_FULL;
         CreateBolt(b_type, nutsType);
     }
-    private void CreateBolt(eBoltType b_type, List<eNutColor> nutsType)
+    private void CreateBolt(eBoltType b_type, List<NutData> nutsType)
     {
         string path = Constant.GetBoltPrefabPath(b_type);
         var handle = Addressables.LoadAssetAsync<GameObject>(path);
 
         handle.Completed += (AsyncOperationHandle<GameObject> task) =>
         {
-            GameObject go = GameObject.Instantiate(task.Result);
-            go.transform.SetParent(root);
-            go.transform.position = thisPosition;
+            GameObject go = GameObject.Instantiate(task.Result, thisPosition, Quaternion.identity, root);
             go.GetComponent<BoltHodler>().boltData = this;
             foreach (Transform child in go.transform)
             {
@@ -77,9 +79,10 @@ public class Bolt
             }
             for (int i = 0; i < nutsType.Count; i++)
             {
-                Nut nut = new Nut(root, availablePos[i + 1], this, nutsType[i]);
+                Nut nut = new Nut(root, availablePos[i + 1], this, nutsType[i].Color, nutsType[i].Type);
                 nutsStack.Push(nut);
             }
+
         };
     }
     
@@ -87,6 +90,10 @@ public class Bolt
     {
         if (boltState == eBoltState.NONE) return null;
         if(boltState==eBoltState.SIMILAR_FULL) return null;
+        return nutsStack.Pop();
+    }
+    public Nut RemoveTopNut()
+    {
         return nutsStack.Pop();
     }
     public Nut CheckTopNut()
@@ -101,7 +108,6 @@ public class Bolt
         {
             nutsStack.Push(nut);
             BoltController.instance.NutComeBack(nut, availablePos[nutsStack.Count]);
-            //nut.AnimateMove(availablePos[nutsStack.Count],1f);
             BoltController.instance.isBusy = true;
             await Task.Delay(500);
             BoltController.instance.isBusy = false;
@@ -114,7 +120,6 @@ public class Bolt
             nutsStack.Push(nut);
             nut.SetBoltParent(this);
             BoltController.instance.NutMoveToNewBolt(nut, this,availablePos[nutsStack.Count]);
-            //nut.AnimateMove(availablePos[nutsStack.Count],1f);
             BoltController.instance.isBusy = true;
             await Task.Delay(1000);
             BoltController.instance.isBusy = false;
@@ -122,12 +127,11 @@ public class Bolt
         }
         else if(boltState == eBoltState.READY)
         {
-            if (nut.nutType == nutsStack.Peek().nutType)
+            if (nut.nutColor == nutsStack.Peek().nutColor)
             {
                 nutsStack.Push(nut);
                 nut.SetBoltParent(this);
                 BoltController.instance.NutMoveToNewBolt(nut, this,availablePos[nutsStack.Count]);
-                //nut.AnimateMove(availablePos[nutsStack.Count],1f);
                 BoltController.instance.isBusy = true;
                 await Task.Delay(1000);
                 BoltController.instance.isBusy = false;
@@ -137,12 +141,16 @@ public class Bolt
         return false;
     }
 
-
     public eBoltState GetBoltState()
     {
         boltState = SetBoltState();
+        if (boltState == eBoltState.SIMILAR_FULL)
+            CompleteEffect();
+        else
+            UndoCompleteEffect();
         return boltState;
     }
+
     private eBoltState SetBoltState()
     {
         if (nutsStack.Count == 0) return eBoltState.NONE;
@@ -151,11 +159,11 @@ public class Bolt
         {
             Nut top = nutsStack.Pop();
             Nut second = nutsStack.Peek();
-            eNutColor nType = second.nutType;
+            eNutColor nType = second.nutColor;
             nutsStack.Push(top);
             foreach (Nut nut in nutsStack)
             {
-                if (nut.nutType != nType)
+                if (nut.nutColor != nType)
                     return eBoltState.DIFFERENT_FULL;
             }
         }
@@ -168,11 +176,30 @@ public class Bolt
         nutsStack.Push(nut);
         nut.SetBoltParent(this);
 
-
         BoltController.instance.NutMoveToNewBolt(nut, this, availablePos[nutsStack.Count]);
         //nut.AnimateMove(availablePos[nutsStack.Count],1f);
         BoltController.instance.isBusy = true;
         await Task.Delay(1000);
         BoltController.instance.isBusy = false;
+    }
+    public async void CompleteEffect()
+    {
+        await BoltCompleteEffect();
+    }
+    public async Task BoltCompleteEffect()
+    {
+        foreach (Nut nut in nutsStack)
+        {
+            nut.MatchParticle();
+            await Task.Delay(100);
+        }
+        
+    }
+    public void UndoCompleteEffect()
+    {
+        foreach (Nut nut in nutsStack)
+        {
+            nut.UndoMatchParticle();
+        }
     }
 }

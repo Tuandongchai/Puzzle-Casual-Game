@@ -299,7 +299,6 @@ GameObject:
   - component: {fileID: 2515566530496963456}
   - component: {fileID: 3590682625035799454}
   - component: {fileID: 6079050650287679347}
-  - component: {fileID: 2492611944661407596}
   m_Layer: 6
   m_Name: Outline
   m_TagString: Untagged
@@ -373,22 +372,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!111 &2492611944661407596
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 497818758157285751}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 24e75aba96bcf0d4b9d2f7cd6cd15ada, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 24e75aba96bcf0d4b9d2f7cd6cd15ada, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &1252319273468959936
 GameObject:
   m_ObjectHideFlags: 0
@@ -840,8 +823,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.70710707, y: -0, z: -0, w: 0.7071066}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.35476, y: 0.35476, z: 0.35476}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2562739939786914406}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -6173,7 +6156,6 @@ GameObject:
   - component: {fileID: 7194741585480870682}
   - component: {fileID: 8348733380229895757}
   - component: {fileID: 4083512234652481801}
-  - component: {fileID: 6944591971329992997}
   m_Layer: 6
   m_Name: HideColor
   m_TagString: Untagged
@@ -6248,22 +6230,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!111 &6944591971329992997
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7834926373969460990}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: c835f1a4a537cf649ac48c5e2291cb0b, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: c835f1a4a537cf649ac48c5e2291cb0b, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &8383646724796138152
 GameObject:
   m_ObjectHideFlags: 0

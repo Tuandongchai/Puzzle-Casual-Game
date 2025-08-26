@@ -62,6 +62,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a52e05511d232794f8fb045f6096eb6a
+    m_Address: Assets/Resources_moved/Prefabs/Bolts3.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ccab2ca89eb45b04ea7a67ae1918817f
+    m_Address: Assets/Resources_moved/Prefabs/Bolts5.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ddba2826620ef30458cad742bb250964
+    m_Address: Assets/Resources_moved/Prefabs/Bolts6.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5bfcc940860f28f45a7c73b929d6962f
+    m_Address: Assets/Resources_moved/Prefabs/Bolts7.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 06340e53ccdb57541b730717605a55f8, type: 2}
   m_SchemaSet:

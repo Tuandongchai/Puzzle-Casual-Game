@@ -5,6 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
+public class NutData
+{
+    public eNutColor Color;
+    public eNutType Type;
+
+    public NutData(eNutColor color, eNutType type)
+    {
+        Color = color;
+        Type = type;
+    }
+}
 public class BoltController : MonoBehaviour
 {
     public static BoltController instance;
@@ -36,27 +47,38 @@ public class BoltController : MonoBehaviour
     }
     private void Start()
     {
-        List<eNutColor> list = new List<eNutColor> { 
-            eNutColor.YELLOW, eNutColor.YELLOW, eNutColor.RED, eNutColor.YELLOW
-        };
-        Bolt bolt = new Bolt(this.transform,new Vector3(-2,1,1), gameSettings, list);
+        List<NutData> nutsList = new List<NutData>
+        {
+            new NutData(eNutColor.YELLOW,eNutType.HIDE),
+            new NutData(eNutColor.RED, eNutType.HIDE),
+            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
+            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
 
-        List<eNutColor> list1 = new List<eNutColor> {
-            eNutColor.YELLOW
         };
-        Bolt bolt1 = new Bolt(this.transform,Vector3.one, gameSettings, list1);
+        Bolt bolt = new Bolt(this.transform, new Vector3(-2, 1, 1), gameSettings, nutsList);
 
-        List<eNutColor> list2 = new List<eNutColor> {
-            eNutColor.YELLOW, eNutColor.RED
+        List<NutData> nutsList1 = new List<NutData>
+        {
+            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
         };
-        Bolt bolt2 = new Bolt(this.transform, new Vector3(-5, 1, 1), gameSettings, list2);
+        Bolt bolt1 = new Bolt(this.transform, Vector3.one, gameSettings, nutsList1);
 
-        List<eNutColor> list3 = new List<eNutColor> {
-            eNutColor.RED, eNutColor.YELLOW, eNutColor.RED
+        List<NutData> nutsList2 = new List<NutData>
+        {
+            new NutData(eNutColor.RED, eNutType.HIDE),
+            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
         };
-        Bolt bolt3 = new Bolt(this.transform, new Vector3(4, 1, 1), gameSettings, list3);
+        Bolt bolt2 = new Bolt(this.transform, new Vector3(-5, 1, 1), gameSettings, nutsList2);
 
-        Bolt bolt4 = new Bolt(this.transform, new Vector3(7, 1, 1), gameSettings, new List<eNutColor>());
+        List<NutData> nutsList3 = new List<NutData>
+        {
+            new NutData(eNutColor.RED, eNutType.NORMAL),
+            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
+            new NutData(eNutColor.RED, eNutType.HIDE),
+        };
+        Bolt bolt3 = new Bolt(this.transform, new Vector3(4, 1, 1), gameSettings, nutsList3);
+
+        Bolt bolt4 = new Bolt(this.transform, new Vector3(7, 1, 1), gameSettings, new List<NutData>());
     }
     private void Update()
     {
@@ -69,6 +91,8 @@ public class BoltController : MonoBehaviour
     private async void Swap()
     {
         //var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero); Game 2D
+        if(isBusy) 
+            return;
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -88,7 +112,9 @@ public class BoltController : MonoBehaviour
                 else
                 {
                     secondBolt = hit.collider.GetComponent<BoltHodler>().boltData;
-                    Match();
+                    isBusy = true;
+                    await Match(selectedNut);
+                    isBusy = false;
                 }
             }
         }
@@ -107,12 +133,34 @@ public class BoltController : MonoBehaviour
     {
         secondBolt = null;
     }
-    private async void Match()
+    private async Task Match(Nut nut)
     {
-        if (await secondBolt.AddTopNut(selectedNut))
+        isBusy = true;
+        if (await secondBolt.AddTopNut(nut))
         {
             AddStepToOldStep();
+            if (firstBolt.GetBoltState()!=eBoltState.NONE && firstBolt!=secondBolt)
+            {
+                if (firstBolt.CheckTopNut().nutType == eNutType.HIDE)
+                {
+                    await NutUnhidden(firstBolt.CheckTopNut());
+                }        
+                if (firstBolt.CheckTopNut().nutColor==selectedNut.nutColor)
+                {
+                    if (secondBolt.GetBoltState() != eBoltState.SIMILAR_FULL && secondBolt.GetBoltState() != eBoltState.DIFFERENT_FULL)
+                    {
+                        selectedNut = firstBolt.GetTopNut();
+                        await NutMoveUp(selectedNut, firstBolt);
+                        await Match(selectedNut);
+                        return;
+                    }
+                }
+
+            }
+            
             ResetSelectedBolt();
+            isBusy = false;
+            //
         }
         else
             ResetSecondBolt();
@@ -134,21 +182,21 @@ public class BoltController : MonoBehaviour
         dict = oldStep.Pop();
         List<Bolt> bolts = new List<Bolt>(dict.Keys.First());
         Nut nut = dict.Values.First();
+        bolts[1].RemoveTopNut();
         await NutMoveUp(nut, bolts[1]);
-        bolts[1].GetTopNut();
         await bolts[0].NutComeBack(nut);
+
         bolts[0].GetBoltState();
         bolts[1].GetBoltState();
 
     }
-
-
 
     //animation
     //move up
     public async Task NutMoveUp(Nut nut, Bolt bolt)
     {
         await AnimateNutMoveUp(nut, bolt);
+
     }
     private async Task AnimateNutMoveUp(Nut nut, Bolt bolt)
     {
@@ -171,7 +219,7 @@ public class BoltController : MonoBehaviour
         await Task.Delay(500);
         isBusy = false;
     }
-    // move back
+    // move down
 
     public async void NutComeBack(Nut nut, Vector3 newBolt)
     {
@@ -181,6 +229,23 @@ public class BoltController : MonoBehaviour
     {
         isBusy = true;
         nut.Animatecounterclockwise(newBolt, 0.5f);
+        await Task.Delay(500);
+        isBusy = false;
+    }
+
+    //unhidden
+    private async Task NutUnhidden(Nut nut)
+    {
+        isBusy = true;
+        nut.Unhidden();
+        await Task.Delay(550);
+        isBusy = false;
+    }
+    //hidden
+    private async Task Nuthidden(Nut nut)
+    {
+        isBusy = true;
+        nut.Hidden();
         await Task.Delay(500);
         isBusy = false;
     }

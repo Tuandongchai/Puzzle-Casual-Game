@@ -16,9 +16,16 @@ public enum eNutColor
     GREEN,
     PURPLE
 };
+
+public enum eNutType{
+    NORMAL,
+    HIDE
+}
 public class Nut
 {
-    public eNutColor nutType { get; private set; }
+    public eNutColor nutColor { get; private set; }
+
+    public eNutType nutType { get; private set; } 
 
     public Bolt boltParent { get; private set; }
 
@@ -28,7 +35,7 @@ public class Nut
 
     private GameObject View;
 
-    public Nut(Transform transform,Vector3 postion, Bolt bolt, eNutColor type)
+    public Nut(Transform transform,Vector3 postion, Bolt bolt, eNutColor color, eNutType type=eNutType.NORMAL)
     {
         root = transform;
 
@@ -36,19 +43,21 @@ public class Nut
 
         boltParent = bolt;
 
+        nutColor = color;
+
         nutType = type;
 
-        CreateNut(type, pos);
+        CreateNut(color, type,pos);
     }
-    private void CreateNut(eNutColor type, Vector3 pos)
+    private void CreateNut(eNutColor color, eNutType type,Vector3 pos)
     {
-        string path = Constant.GetNutPrefabPath(type);
+        string path = Constant.GetNutPrefabPath(color);
         var handle = Addressables.LoadAssetAsync<GameObject>(path);
         handle.Completed += (AsyncOperationHandle<GameObject> task) =>
         {
-            View = GameObject.Instantiate(task.Result);
-            View.transform.parent = root;
-            View.transform.position = pos;
+            View = GameObject.Instantiate(task.Result,pos, Quaternion.identity, root);
+            if(type ==eNutType.HIDE)
+                View.transform.GetChild(1).gameObject.SetActive(true);
         };
     }
 
@@ -57,6 +66,7 @@ public class Nut
         this.boltParent = bolt;
     }
 
+    //
     public void AnimateClockwise(Vector3 targetPos, float duration)
     {
         View.transform.DOMove(targetPos, duration)
@@ -87,5 +97,47 @@ public class Nut
     {
         View.transform.DOMove(targetPos, duration)
                  .SetEase(Ease.Linear);
+    }
+
+    //
+    public void Hidden()
+    {
+        nutType = eNutType.HIDE;
+        View.transform.GetChild(1).transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.3f)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                View.transform.GetChild(1).transform.DOScale(new Vector3(1.05f, 1.05f, 1.05f), 0.2f)
+                    .SetEase(Ease.Linear);
+            });
+    }
+    public void Unhidden()
+    {
+        nutType = eNutType.NORMAL;
+        View.transform.GetChild(1).transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                View.transform.GetChild(1).transform.DOScale(new Vector3(0.2f, 0.2f, 0.2f), 0.3f)
+                    .SetEase(Ease.Linear);
+            });
+    }
+
+    public void MatchParticle()
+    {
+        View.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.2f)
+            .SetEase(Ease.Linear)
+            .SetDelay(0.05f)
+            .OnComplete(() =>
+            {
+                View.transform.DOScale(new Vector3(0.8f, 0.8f, 0.8f), 0.2f)
+                    .SetEase(Ease.Linear);
+            });
+        View.transform.GetChild(11).gameObject.SetActive(true);
+    }
+    public void UndoMatchParticle()
+    {
+        View.transform.GetChild(11).gameObject.SetActive(false);
+
     }
 }
