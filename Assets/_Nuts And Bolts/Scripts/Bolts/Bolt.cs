@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -29,7 +30,7 @@ public class Bolt
 
     private Stack<Nut> nutsStack=new Stack<Nut>();
 
-    public List<Vector3> availablePos=new List<Vector3>();
+    public List<Vector3> availablePos = new List<Vector3>() ;
 
     private GameSettings settings;
 
@@ -107,10 +108,7 @@ public class Bolt
         if (nut.boltParent == this)
         {
             nutsStack.Push(nut);
-            BoltController.instance.NutComeBack(nut, availablePos[nutsStack.Count]);
-            BoltController.instance.isBusy = true;
-            await Task.Delay(500);
-            BoltController.instance.isBusy = false;
+            await BoltController.instance.NutComeBack(nut, availablePos[nutsStack.Count]);
             return true;
         }
         if (boltState == eBoltState.SIMILAR_FULL) return false;
@@ -119,10 +117,8 @@ public class Bolt
         {
             nutsStack.Push(nut);
             nut.SetBoltParent(this);
-            BoltController.instance.NutMoveToNewBolt(nut, this,availablePos[nutsStack.Count]);
-            BoltController.instance.isBusy = true;
-            await Task.Delay(1000);
-            BoltController.instance.isBusy = false;
+            await BoltController.instance.NutMoveToNewBolt(nut, this,availablePos[nutsStack.Count]);
+
             return true;
         }
         else if(boltState == eBoltState.READY)
@@ -131,10 +127,9 @@ public class Bolt
             {
                 nutsStack.Push(nut);
                 nut.SetBoltParent(this);
-                BoltController.instance.NutMoveToNewBolt(nut, this,availablePos[nutsStack.Count]);
-                BoltController.instance.isBusy = true;
-                await Task.Delay(1000);
-                BoltController.instance.isBusy = false;
+
+                await BoltController.instance.NutMoveToNewBolt(nut, this,availablePos[nutsStack.Count]);
+
                 return true;
             }
         }
@@ -176,11 +171,7 @@ public class Bolt
         nutsStack.Push(nut);
         nut.SetBoltParent(this);
 
-        BoltController.instance.NutMoveToNewBolt(nut, this, availablePos[nutsStack.Count]);
-        //nut.AnimateMove(availablePos[nutsStack.Count],1f);
-        BoltController.instance.isBusy = true;
-        await Task.Delay(1000);
-        BoltController.instance.isBusy = false;
+        await BoltController.instance.NutMoveToNewBolt(nut, this, availablePos[nutsStack.Count]);
     }
     public async void CompleteEffect()
     {

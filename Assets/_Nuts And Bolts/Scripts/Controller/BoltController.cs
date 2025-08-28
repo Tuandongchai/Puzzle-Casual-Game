@@ -112,9 +112,7 @@ public class BoltController : MonoBehaviour
                 else
                 {
                     secondBolt = hit.collider.GetComponent<BoltHodler>().boltData;
-                    isBusy = true;
                     await Match(selectedNut);
-                    isBusy = false;
                 }
             }
         }
@@ -135,7 +133,6 @@ public class BoltController : MonoBehaviour
     }
     private async Task Match(Nut nut)
     {
-        isBusy = true;
         if (await secondBolt.AddTopNut(nut))
         {
             AddStepToOldStep();
@@ -157,9 +154,7 @@ public class BoltController : MonoBehaviour
                 }
 
             }
-            
             ResetSelectedBolt();
-            isBusy = false;
             //
         }
         else
@@ -183,6 +178,7 @@ public class BoltController : MonoBehaviour
         List<Bolt> bolts = new List<Bolt>(dict.Keys.First());
         Nut nut = dict.Values.First();
         bolts[1].RemoveTopNut();
+
         await NutMoveUp(nut, bolts[1]);
         await bolts[0].NutComeBack(nut);
 
@@ -195,41 +191,34 @@ public class BoltController : MonoBehaviour
     //move up
     public async Task NutMoveUp(Nut nut, Bolt bolt)
     {
-        await AnimateNutMoveUp(nut, bolt);
-
-    }
-    private async Task AnimateNutMoveUp(Nut nut, Bolt bolt)
-    {
-        isBusy = true; 
+        isBusy = true;
+        
         nut.AnimateClockwise(bolt.availablePos[0], 0.5f);
         await Task.Delay(500);
         isBusy = false;
     }
     //move to target
-    public async void NutMoveToNewBolt(Nut nut,Bolt bolt ,Vector3 newBolt)
+    public async Task NutMoveToNewBolt(Nut nut, Bolt bolt, Vector3 newBolt)
     {
-        await AnimateNutMoveNewBolt(nut, bolt,newBolt);
-    }
-    private async Task AnimateNutMoveNewBolt(Nut nut, Bolt bolt,Vector3 newBolt)
-    {
+       
         isBusy = true;
         nut.AnimateMove(bolt.availablePos[0], 0.5f);
         await Task.Delay(500);
+
         nut.Animatecounterclockwise(newBolt, 0.5f);
         await Task.Delay(500);
+
         isBusy = false;
     }
     // move down
 
-    public async void NutComeBack(Nut nut, Vector3 newBolt)
-    {
-        await AnimateNutComeBackt(nut, newBolt);
-    }
-    private async Task AnimateNutComeBackt(Nut nut, Vector3 newBolt)
+    public async Task NutComeBack(Nut nut, Vector3 newBolt)
     {
         isBusy = true;
+
         nut.Animatecounterclockwise(newBolt, 0.5f);
         await Task.Delay(500);
+
         isBusy = false;
     }
 
