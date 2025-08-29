@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,35 +41,41 @@ public class Bolt
 
     private int currentNutsHas;
 
-    public Bolt(Transform transform ,Vector3 position, GameSettings settings, List<NutData> nutsType = null)
+    private int index;
+
+    public Bolt(Transform transform ,int index, GameSettings settings)
     {
         this.root = transform;
 
-        thisPosition = position;
+        this.index = index;
+
+        thisPosition = settings.listBolt[index].pos ;
 
         this.settings = settings;
 
-        b_type = settings.BoltType;
+        b_type = settings.listBolt[index].type;
 
-        currentNutsHas = nutsType.Count;
+        currentNutsHas = settings.listBolt[index].nuts.Count();
 
         if(currentNutsHas ==0 )
             boltState = eBoltState.NONE;
-        else if (currentNutsHas < settings.boltSize)
+        else if (currentNutsHas < settings.listBolt[index].size)
             boltState = eBoltState.READY;
         else
             boltState = eBoltState.DIFFERENT_FULL;
-        CreateBolt(b_type, nutsType);
+        CreateBolt(b_type, settings.listBolt[index].nuts);
     }
-    private void CreateBolt(eBoltType b_type, List<NutData> nutsType)
+    private void CreateBolt(eBoltType b_type, NutData[] nutsType)
     {
         string path = Constant.GetBoltPrefabPath(b_type);
         var handle = Addressables.LoadAssetAsync<GameObject>(path);
 
-        handle.Completed += (AsyncOperationHandle<GameObject> task) =>
+        handle.Completed += async (AsyncOperationHandle<GameObject> task) =>
         {
             GameObject go = GameObject.Instantiate(task.Result, thisPosition, Quaternion.identity, root);
             go.GetComponent<BoltHodler>().boltData = this;
+
+            await BoltSpaw(go, 0.2f);
             foreach (Transform child in go.transform)
             {
                 if(child?.GetComponent<AvailablePos>() != null)
@@ -78,9 +85,9 @@ public class Bolt
                     availablePos.Add(child.GetComponent<AvailablePos>().pos);
                 }
             }
-            for (int i = 0; i < nutsType.Count; i++)
+            for (int i = 0; i < nutsType.Length; i++)
             {
-                Nut nut = new Nut(root, availablePos[i + 1], this, nutsType[i].Color, nutsType[i].Type);
+                Nut nut = await Nut.Create(root, availablePos[i + 1], this, nutsType[i].Color, availablePos[0], nutsType[i].Type);
                 nutsStack.Push(nut);
             }
 
@@ -149,8 +156,8 @@ public class Bolt
     private eBoltState SetBoltState()
     {
         if (nutsStack.Count == 0) return eBoltState.NONE;
-        else if (nutsStack.Count < settings.boltSize) return eBoltState.READY;
-        else if (nutsStack.Count == settings.boltSize)
+        else if (nutsStack.Count < settings.listBolt[index].size) return eBoltState.READY;
+        else if (nutsStack.Count == settings.listBolt[index].size)
         {
             Nut top = nutsStack.Pop();
             Nut second = nutsStack.Peek();
@@ -192,5 +199,13 @@ public class Bolt
         {
             nut.UndoMatchParticle();
         }
+    }
+
+    public async Task BoltSpaw(GameObject go,float duration)
+    {
+        Vector3 current = go.transform.localScale;
+        go.transform.localScale = Vector3.zero;
+        go.transform.DOScale(current, duration).SetEase(Ease.Linear);
+        await Task.Delay((int)(duration*1000));
     }
 }

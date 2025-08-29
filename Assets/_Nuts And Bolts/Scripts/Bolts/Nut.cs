@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -35,32 +36,38 @@ public class Nut
 
     private GameObject View;
 
-    public Nut(Transform transform,Vector3 postion, Bolt bolt, eNutColor color, eNutType type=eNutType.NORMAL)
+    
+    public static async Task<Nut> Create(Transform transform, Vector3 postion, Bolt bolt, eNutColor color, Vector3 posStart, eNutType type = eNutType.NORMAL)
+    {
+        Nut nut = new Nut(transform, postion, bolt, color, type);
+        await nut.CreateNut(color, type, postion, posStart);
+        return nut;
+    }
+
+    private Nut(Transform transform, Vector3 postion, Bolt bolt, eNutColor color, eNutType type = eNutType.NORMAL)
     {
         root = transform;
-
         pos = postion;
-
         boltParent = bolt;
-
         nutColor = color;
-
         nutType = type;
-
-        CreateNut(color, type,pos);
     }
-    private void CreateNut(eNutColor color, eNutType type,Vector3 pos)
+
+    
+
+    private async Task CreateNut(eNutColor color, eNutType type, Vector3 pos, Vector3 posStart)
     {
         string path = Constant.GetNutPrefabPath(color);
         var handle = Addressables.LoadAssetAsync<GameObject>(path);
-        handle.Completed += (AsyncOperationHandle<GameObject> task) =>
-        {
-            View = GameObject.Instantiate(task.Result,pos, Quaternion.identity, root);
-            if(type ==eNutType.HIDE)
-                View.transform.GetChild(1).gameObject.SetActive(true);
-        };
-    }
+        var prefab = await handle.Task;
 
+        View = GameObject.Instantiate(prefab, posStart, Quaternion.identity, root);
+        await AnimateNutSpawn(0.2f, 0.4f, pos);
+
+        if (type == eNutType.HIDE)
+            View.transform.GetChild(1).gameObject.SetActive(true);
+    }
+    //
     public void SetBoltParent(Bolt bolt)
     {
         this.boltParent = bolt;
@@ -74,7 +81,7 @@ public class Nut
 
         View.transform.DORotate(
             new Vector3(0, 360, 0),
-            0.5f,                     
+            0.4f,                     
             RotateMode.LocalAxisAdd 
         )
         .SetEase(Ease.Linear)
@@ -87,7 +94,7 @@ public class Nut
 
         View.transform.DORotate(
             new Vector3(0, -360, 0),
-            0.5f,
+            0.4f,
             RotateMode.LocalAxisAdd
         )
         .SetEase(Ease.Linear)
@@ -139,5 +146,18 @@ public class Nut
     {
         View.transform.GetChild(11).gameObject.SetActive(false);
 
+    }
+
+    private async Task AnimateNutSpawn(float spawDuration, float goToPosDuration, Vector3 pos)
+    {
+        BoltController.instance.isBusy = true;
+        Vector3 current = View.transform.localScale;
+        View.transform.localScale = Vector3.zero;
+        View.transform.DOScale(current, spawDuration).SetEase(Ease.Linear);
+        await Task.Delay((int) (spawDuration*1000));
+        Animatecounterclockwise(pos, goToPosDuration);
+        await Task.Delay((int) (goToPosDuration*1000));
+        BoltController.instance.isBusy = false;
+        
     }
 }

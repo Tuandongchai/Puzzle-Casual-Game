@@ -9,10 +9,8 @@ public class UIPanelNutsAndBoltsManager : MonoBehaviour,IMenu
     private GameManager m_gameManager;
     private List<IMenu> m_menus = new List<IMenu>();
 
-    [SerializeField] private Button btnNutsAndBolts;
     private void Awake()
     {
-        btnNutsAndBolts.onClick.AddListener(OnClickPlay);
         foreach (Transform child in transform)
         {
             IMenuNAB menu = child.GetComponent< IMenuNAB>();
@@ -23,7 +21,6 @@ public class UIPanelNutsAndBoltsManager : MonoBehaviour,IMenu
 
     private void OnDestroy()
     {
-        if (btnNutsAndBolts) btnNutsAndBolts.onClick.RemoveAllListeners();
     }
     void Start()
     {
@@ -32,18 +29,10 @@ public class UIPanelNutsAndBoltsManager : MonoBehaviour,IMenu
             menu.SetupNAB(this);
         }
     }
-    private void OnClickPlay()
-    {
-        
-    }
+    
     public void Hide()
     {
         this.gameObject.SetActive(false);
-    }
-
-    public void Setup(UIMainManager mngr)
-    {
-        m_mngr = mngr;
     }
 
     public void Show()
@@ -51,8 +40,9 @@ public class UIPanelNutsAndBoltsManager : MonoBehaviour,IMenu
         this.gameObject.SetActive(true);
     }
 
-    internal void Setup(GameManager gameManager)
+    public void Setup(UIMainManager mngr,GameManager gameManager)
     {
+        m_mngr = mngr;
         m_gameManager = gameManager;
         m_gameManager.StateChangedAction += OnGameStateChange;
     }
@@ -72,9 +62,9 @@ public class UIPanelNutsAndBoltsManager : MonoBehaviour,IMenu
             
         }
     }
-    private void ShowMenu<T>() where T : IMenu
+    private void ShowMenu<T>() where T : IMenuNAB
     {
-        foreach (IMenu menu in m_menus)
+        foreach (IMenuNAB menu in m_menus)
         {
             if (menu is T)
                 menu.Show();

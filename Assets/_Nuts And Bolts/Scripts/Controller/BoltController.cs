@@ -5,22 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class NutData
-{
-    public eNutColor Color;
-    public eNutType Type;
 
-    public NutData(eNutColor color, eNutType type)
-    {
-        Color = color;
-        Type = type;
-    }
-}
 public class BoltController : MonoBehaviour
 {
     public static BoltController instance;
 
-    [SerializeField] private GameSettings gameSettings;
+    private GameSettings gameSettings;
+
+    private List<Bolt> bolts = new List<Bolt>();    
 
     private Nut selectedNut;
 
@@ -40,52 +32,26 @@ public class BoltController : MonoBehaviour
         else
             Destroy(gameObject);
     }
-    private void Setup(GameSettings settings)
+    public void Setup(GameSettings settings)
     {
         gameSettings = settings;
+        for(int i=0; i<settings.listBolt.Count; i++)
+        {
+            Bolt bolt = new Bolt(this.transform, i, settings);
+            bolts.Add(bolt);
+        }
 
     }
     private void Start()
     {
-        List<NutData> nutsList = new List<NutData>
-        {
-            new NutData(eNutColor.YELLOW,eNutType.HIDE),
-            new NutData(eNutColor.RED, eNutType.HIDE),
-            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
-            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
-
-        };
-        Bolt bolt = new Bolt(this.transform, new Vector3(-2, 1, 1), gameSettings, nutsList);
-
-        List<NutData> nutsList1 = new List<NutData>
-        {
-            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
-        };
-        Bolt bolt1 = new Bolt(this.transform, Vector3.one, gameSettings, nutsList1);
-
-        List<NutData> nutsList2 = new List<NutData>
-        {
-            new NutData(eNutColor.RED, eNutType.HIDE),
-            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
-        };
-        Bolt bolt2 = new Bolt(this.transform, new Vector3(-5, 1, 1), gameSettings, nutsList2);
-
-        List<NutData> nutsList3 = new List<NutData>
-        {
-            new NutData(eNutColor.RED, eNutType.NORMAL),
-            new NutData(eNutColor.YELLOW, eNutType.NORMAL),
-            new NutData(eNutColor.RED, eNutType.HIDE),
-        };
-        Bolt bolt3 = new Bolt(this.transform, new Vector3(4, 1, 1), gameSettings, nutsList3);
-
-        Bolt bolt4 = new Bolt(this.transform, new Vector3(7, 1, 1), gameSettings, new List<NutData>());
+        
     }
     private void Update()
     {
         if (isBusy) return;
         Swap();
-        if(Input.GetKeyDown(KeyCode.Space))
-            Undo();
+        /*if(Input.GetKeyDown(KeyCode.Space))
+            Undo();*/
     }
 
     private async void Swap()
@@ -169,7 +135,7 @@ public class BoltController : MonoBehaviour
         oldStep.Push(dict);
     }
 
-    public async void Undo()
+    public async Task Undo()
     {
         if (oldStep.Count <= 0) return;
 
@@ -193,8 +159,8 @@ public class BoltController : MonoBehaviour
     {
         isBusy = true;
         
-        nut.AnimateClockwise(bolt.availablePos[0], 0.5f);
-        await Task.Delay(500);
+        nut.AnimateClockwise(bolt.availablePos[0], 0.4f);
+        await Task.Delay(400);
         isBusy = false;
     }
     //move to target
@@ -202,11 +168,11 @@ public class BoltController : MonoBehaviour
     {
        
         isBusy = true;
-        nut.AnimateMove(bolt.availablePos[0], 0.5f);
-        await Task.Delay(500);
+        nut.AnimateMove(bolt.availablePos[0], 0.3f);
+        await Task.Delay(300);
 
-        nut.Animatecounterclockwise(newBolt, 0.5f);
-        await Task.Delay(500);
+        nut.Animatecounterclockwise(newBolt, 0.4f);
+        await Task.Delay(400);
 
         isBusy = false;
     }
@@ -216,8 +182,8 @@ public class BoltController : MonoBehaviour
     {
         isBusy = true;
 
-        nut.Animatecounterclockwise(newBolt, 0.5f);
-        await Task.Delay(500);
+        nut.Animatecounterclockwise(newBolt, 0.4f);
+        await Task.Delay(400);
 
         isBusy = false;
     }

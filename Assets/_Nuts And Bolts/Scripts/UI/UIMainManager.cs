@@ -20,7 +20,7 @@ public class UIMainManager : MonoBehaviour
     {
         foreach (IMenu menu in m_menuList)
         {
-            menu.Setup(this);
+            menu.Setup(this,GameManager.instance);
         }
     }
     internal void ShowMainMenu()

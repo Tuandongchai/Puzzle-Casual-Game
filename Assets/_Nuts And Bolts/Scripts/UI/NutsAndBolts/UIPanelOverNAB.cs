@@ -11,7 +11,7 @@ public class UIPanelOverNAB : MonoBehaviour,IMenuNAB
         this.gameObject.SetActive(false);
     }
 
-    public void Setup(UIMainManager mngr)
+    public void Setup(UIMainManager mngr, GameManager gmn)
     {
 
     }

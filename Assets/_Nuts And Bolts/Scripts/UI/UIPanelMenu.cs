@@ -29,7 +29,7 @@ public class UIPanelMenu : MonoBehaviour, IMenu
         this.gameObject.SetActive(false);
     }
 
-    public void Setup(UIMainManager mngr)
+    public void Setup(UIMainManager mngr, GameManager gmn)
     {
         m_mngr = mngr;
     }

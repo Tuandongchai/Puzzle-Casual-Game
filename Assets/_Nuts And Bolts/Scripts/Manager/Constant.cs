@@ -19,13 +19,16 @@ public static class Constant
     public const string NUT_TYPE_RED = "Assets/_Nuts And Bolts/Prefabs/Red_Nut.prefab";
     public const string NUT_TYPE_YELLOW = "Assets/_Nuts And Bolts/Prefabs/Yellow_Nut.prefab";
 
+
+    //Nuts And Bolt Level
+    public const string NAB_EASY_LEVEL1 = "Assets/_Nuts And Bolts/Level/Easy_Level1.asset";
+
     public static string GetBoltPrefabPath(eBoltType type)
     {
         switch (type)
         {
             case eBoltType.BOLT_THREE:
                 return BOLT_TYPE_THREE;
-
             case eBoltType.BOLT_FOUR:
                 return BOLT_TYPE_FOUR;
             case eBoltType.BOLT_FIVE:
